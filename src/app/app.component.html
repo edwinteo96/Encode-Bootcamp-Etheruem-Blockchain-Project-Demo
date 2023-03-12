@@ -1,23 +1,33 @@
 <div class="px-4 py-5 my-5 text-center">
     <h1 class="display-5 fw-bold">Hello!</h1>
+    <div class="top-right">
+      <button
+          type="button"
+          class="btn btn-success btn-lg px-4 gap-3 my-4"
+          (click)="connectToMetamask()"
+        >
+          {{ signer ? walletAddress : "Connect Wallet" }}
+        </button>
+    </div>
     <div class="col-lg-6 mx-auto">
       <div class="mt-4" *ngIf="blockNumber && blockNumber > 0">
         <p class="lead mb-4">
           We are connected to the Goerli blockchain at the block
           <strong>{{ blockNumber }}</strong>
         </p>
-        <button
-          type="button"
-          class="btn btn-success btn-lg px-4 gap-3 my-4"
-          (click)="createWallet()"
-        >
-          {{ userWallet ? "Create another" : "Create" }} Wallet
-        </button>
-        <div class="card mt-4 mx-auto" *ngIf="userWallet">
+        <div *ngIf="transactions && transactions.length > 0">
+          <p>Transaction List : </p>
+          <ul>
+            <li *ngFor="let transaction of transactions ; let i = index">
+              Transaction # : {{transaction}}
+           </li>
+          </ul>
+        </div>
+        <div class="card mt-4 mx-auto" *ngIf="signer">
           <div class="card-body">
             <h5 class="card-title">User Wallet</h5>
             <h6 class="card-subtitle mb-2 text-muted">
-              {{ userWallet.address }}
+              {{ walletAddress }}
             </h6>
             <p class="card-text">
               Balance: {{ userEthBalance }} ETH
