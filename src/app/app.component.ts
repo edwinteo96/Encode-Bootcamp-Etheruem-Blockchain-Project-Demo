@@ -109,7 +109,15 @@ export class AppComponent {
   async delegateVote() {
     const erc20VoteSignContract = new ethers.Contract(this.CONST_ERC20VOTE_ADDRESS, erc20voteJson, this.signer);
     if (erc20VoteSignContract !== undefined) {
-      await erc20VoteSignContract['delegate'](ethers.utils.getAddress(this.walletAddress ?? ""));
+      erc20VoteSignContract['delegate'](ethers.utils.getAddress(this.walletAddress ?? "")).then((tx: any) => {
+        // Transaction successful
+        console.log(tx);
+        alert(tx);
+      }).catch((error: { message: any; }) => {
+        // Transaction failed
+        alert(error.message);
+        console.log(error.message);
+      });
     }
   }
   
@@ -130,7 +138,14 @@ export class AppComponent {
   async vote() {
     const ballotVoteContract = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.signer);
     if (ballotVoteContract !== undefined) {
-      const result = await ballotVoteContract['vote'](BigNumber.from(this.selectedOption),BigNumber.from(this.voteNumber));
+      ballotVoteContract['vote'](BigNumber.from(this.selectedOption),BigNumber.from(this.voteNumber)).then((tx: any) => {
+        // Transaction successful
+        console.log(tx);
+      }).catch((error: { message: any; }) => {
+        // Transaction failed
+        alert(error.message);
+      });
+      
     }
   }
 
