@@ -29,3 +29,12 @@
 .balance-btn{
   margin-right: 0.7rem;
 }
+
+.btn-col:hover{
+background: transparent;
+color: rgb(32, 32, 32);
+}
+
+.b-body{
+  background:rgb(253, 253, 253);
+}
