@@ -57,18 +57,34 @@
         <div class="card-body">
           <h5 class="card-title">Proposal Information</h5>
           <h6 class="card-subtitle mb-2 text-muted">
-            Contract Address : {{ CONST_TOKENIZED_BALLOT_ADDRESS }}
+            Tokenized Ballot Contract Address : {{ CONST_TOKENIZED_BALLOT_ADDRESS }}
           </h6>
           <p class="card-text">
             Number of Proposal : {{ numProposal }}
           </p>
+          <p class="card-text">
+            Current Winner : {{ winnerName }}
+          </p>
 
           <div *ngIf="proposalNames && proposalNames.length > 0">
-            <ul class="list-group">
-              <li class="list-group-item" *ngFor="let proposalName of proposalNames; let i = index">
-                Proposal {{i+1}} : {{proposalName}}
-             </li>
-            </ul>
+            <div class="radio-group">
+              <ul class="list-group">
+                <li class="list-group-item" *ngFor="let proposalName of proposalNames; let i = index">
+                   <!-- Proposal {{i+1}} : {{proposalName}} -->
+                   <div class="radio-option">
+                      <input type="radio" name="selectedOption" [value]="i" (change)="onOptionChange($event)">
+                      <label>{{proposalName}}</label>
+                   </div>
+               </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+              <label>Vote Count : </label>
+              <input type="number" class="form-control" placeholder="Enter a number" (change)="onInputChange($event)">
+            </div>
           </div>
         </div>
       </div>

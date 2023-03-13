@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { ethers, Wallet, utils, Signer, BigNumber, BigNumberish } from 'ethers';
+import { ethers, Wallet, utils, Signer, BigNumber, BigNumberish, Contract } from 'ethers';
 import tokenJson from './erc20-abi.json';
 import tokenizedBallotJson from './tokenizedballot-abi.json';
 
@@ -15,13 +16,25 @@ export class AppComponent {
   // provider : ethers.providers.BaseProvider;
   provider: ethers.providers.Web3Provider | undefined;
   transactions: string[] | undefined;
+  userEthBalance: string | undefined;
+  walletAddress: string | undefined;
+  signer: Signer | undefined;
+  contract : Contract | undefined;
+  numProposal : BigNumber | undefined;
+  proposalNames : string [] = [];
+  proposalCounts : BigNumber [] = [];
+  winnerName : string | undefined;
+  selectedOption: string | undefined;
+  voteNumber: number = 0;
+
 
   CONST_GOERLIETH_ADDRESS: string = "0x7af963cf6d228e564e2a0aa0ddbf06210b38615d";
   CONST_TOKENIZED_BALLOT_ADDRESS: string = "0x33048359595Def305206558a9a156cc1d97A1C10";
+  CONST_LOCALHOST_VOTE: string = "";
 
-  // constructor (){
-  //   this.provider = ethers.getDefaultProvider('goerli');
-  // }
+  constructor (private http: HttpClient){
+    
+  }
 
   syncBlock() {
     this.blockNumber = 'loading...';
@@ -31,14 +44,33 @@ export class AppComponent {
     });
   }
 
+  onOptionChange(event: any) {
+    this.selectedOption = event.target.value;
+    console.log(`The selected radio is: ${this.selectedOption}`);
+  }
+
+  onInputChange(event: any) {
+    this.voteNumber = event.target.value;
+    console.log(`The input value is: ${this.voteNumber}`);
+  }
+
+  getTokenAddess() {
+    return this.http.get<{address: string}>(this.CONST_LOCALHOST_VOTE);
+  }
+
+  // example ussage of http pub sub
+  tokenContractAddress : string | undefined;
+  httpvote () {
+    this.getTokenAddess().subscribe((response) => {
+      this.tokenContractAddress = response.address;
+    })
+  }
+
   clearBlock() {
     this.blockNumber = 0;
   }
 
   //userWallet: Wallet | undefined;
-  userEthBalance: string | undefined;
-  walletAddress: string | undefined;
-  signer: Signer | undefined;
 
   // createWallet() {
   //   this.userWallet = Wallet.createRandom().connect(this.provider);
@@ -47,31 +79,44 @@ export class AppComponent {
   //     this.userEthBalance = parseFloat(balanceStr);
   //   })
   // }
-
-  numProposal : BigNumber | undefined;
-  proposalNames : string [] = [];
-  proposalCounts : BigNumber [] = [];
-
-  async getProposalName() {
-    let token = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.provider);
-    if (this.numProposal !== undefined) {
-      for (let i = BigNumber.from(0); i.lt(this.numProposal); i = i.add(BigNumber.from(1))) {
-        const proposal = await token['proposals'](i);
-        const text = ethers.utils.toUtf8String(proposal.name).trim();
-        const count = proposal.voteCount;
-        this.proposalNames?.push(text);
-        this.proposalCounts?.push(count);
-      }
+  
+  async getWinnerName() {
+    if (this.contract !== undefined) {
+      const name = await this.contract['winnerName']();
+      const text = ethers.utils.parseBytes32String(name).trim();
+      this.winnerName = text;
     }
   }
 
   async getProposalCount() {
-    let token = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.provider);
-    this.numProposal = await token['numProposals']();
+    if (this.contract !== undefined) {
+      this.numProposal = await this.contract['numProposals']();
+    }
   }
 
   async vote() {
+    if (this.contract !== undefined) {
+      const result = await this.contract['vote'](BigNumber.from(this.selectedOption));
+    }
+    // .send({ gasLimit: 1000000, gasPrice: 10000000000 });
+  }
 
+  async getContract () {
+    this.contract = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.provider);
+  }
+
+  async getProposalName () {
+    if (this.contract !== undefined) {
+      if (this.numProposal !== undefined) {
+        for (let i = BigNumber.from(0); i.lt(this.numProposal); i = i.add(BigNumber.from(1))) {
+          const proposal = await this.contract['proposals'](i);
+          const text = ethers.utils.parseBytes32String(proposal.name).trim();
+          const count = proposal.voteCount;
+          this.proposalNames?.push(text);
+          this.proposalCounts?.push(count);
+        }
+      }
+    }
   }
 
   async connectToMetamask() {
@@ -97,9 +142,11 @@ export class AppComponent {
       })
 
       console.log("goerli address: " + this.CONST_GOERLIETH_ADDRESS);
-
+      
+      await this.getContract();
       await this.getProposalCount();
       await this.getProposalName();
+      await this.getWinnerName();
     } else {
       console.error('Metamask not detected');
     }
