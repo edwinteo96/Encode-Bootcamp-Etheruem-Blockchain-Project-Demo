@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ethers , Wallet  , utils, Signer } from 'ethers';
+import { ethers , Wallet  , utils, Signer, BigNumber } from 'ethers';
 import tokenJson  from './token-abi.json';
 declare var window: any
 
@@ -14,7 +14,7 @@ export class AppComponent {
   provider : ethers.providers.Web3Provider | undefined;
   transactions : string [] | undefined;
 
-  CONST_GOERLIETH_ADDRESS : string = "0x7af963cF6D228E564e2A0aA0DdBF06210B38615D";
+  CONST_GOERLIETH_ADDRESS : string = "0x7af963cf6d228e564e2a0aa0ddbf06210b38615d";
 
   // constructor (){
   //   this.provider = ethers.getDefaultProvider('goerli');
@@ -33,7 +33,7 @@ export class AppComponent {
   }
 
   //userWallet: Wallet | undefined;
-  userEthBalance: number | undefined;
+  userEthBalance: string | undefined;
   walletAddress: string | undefined;
   signer: Signer | undefined;
   
@@ -60,11 +60,16 @@ export class AppComponent {
         console.error(error);
       });
 
-      console.log("goerli address: " + this.CONST_GOERLIETH_ADDRESS);
+      this.signer.getBalance().then(balance => {
+        this.userEthBalance = ethers.utils.formatEther(balance);
+        console.log('Current account address:', balance);
+      }).catch(error => {
+        console.error(error);
+      })
 
-      // Get goerli eth token amount
-      const token = new ethers.Contract(this.CONST_GOERLIETH_ADDRESS, tokenJson, this.provider);
-      this.userEthBalance = await token['balanceOf'](this.walletAddress);
+      console.log("goerli address: " + this.CONST_GOERLIETH_ADDRESS);
+      // let token = new ethers.Contract(this.CONST_GOERLIETH_ADDRESS, tokenJson , this.provider);
+      // this.userEthBalance = await token['balanceOf'](this.walletAddress);
       
       console.log('Current balance: ' + this.userEthBalance);
     } else {
