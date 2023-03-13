@@ -101,7 +101,6 @@ export class AppComponent {
   async delegateVote() {
     if (this.erc20VoteContract !== undefined) {
       this.erc20VoteContract['delegate'](ethers.utils.getAddress(this.walletAddress ?? "")).send();
-      
     }
   }
   
@@ -173,6 +172,7 @@ export class AppComponent {
       console.log("goerli address: " + this.CONST_GOERLIETH_ADDRESS);
       
       // in sequence 
+      await this.syncBlock();
       await this.getContract();
       await this.getVoteContract();
       await this.getVoteTokenSymbol();
