@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { ethers , Wallet  , utils, Signer, BigNumber } from 'ethers';
-import tokenJson  from './token-abi.json';
+import { ethers, Wallet, utils, Signer, BigNumber, BigNumberish } from 'ethers';
+import tokenJson from './erc20-abi.json';
+import tokenizedBallotJson from './tokenizedballot-abi.json';
+
 declare var window: any
 
 @Component({
@@ -9,12 +11,13 @@ declare var window: any
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  blockNumber : number | string | undefined;
+  blockNumber: number | string | undefined;
   // provider : ethers.providers.BaseProvider;
-  provider : ethers.providers.Web3Provider | undefined;
-  transactions : string [] | undefined;
+  provider: ethers.providers.Web3Provider | undefined;
+  transactions: string[] | undefined;
 
-  CONST_GOERLIETH_ADDRESS : string = "0x7af963cf6d228e564e2a0aa0ddbf06210b38615d";
+  CONST_GOERLIETH_ADDRESS: string = "0x7af963cf6d228e564e2a0aa0ddbf06210b38615d";
+  CONST_TOKENIZED_BALLOT_ADDRESS: string = "0x33048359595Def305206558a9a156cc1d97A1C10";
 
   // constructor (){
   //   this.provider = ethers.getDefaultProvider('goerli');
@@ -36,7 +39,7 @@ export class AppComponent {
   userEthBalance: string | undefined;
   walletAddress: string | undefined;
   signer: Signer | undefined;
-  
+
   // createWallet() {
   //   this.userWallet = Wallet.createRandom().connect(this.provider);
   //   this.userWallet.getBalance().then((balanceBN) => {
@@ -44,6 +47,32 @@ export class AppComponent {
   //     this.userEthBalance = parseFloat(balanceStr);
   //   })
   // }
+
+  numProposal : BigNumber | undefined;
+  proposalNames : string [] = [];
+  proposalCounts : BigNumber [] = [];
+
+  async getProposalName() {
+    let token = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.provider);
+    if (this.numProposal !== undefined) {
+      for (let i = BigNumber.from(0); i.lt(this.numProposal); i = i.add(BigNumber.from(1))) {
+        const proposal = await token['proposals'](i);
+        const text = ethers.utils.toUtf8String(proposal.name).trim();
+        const count = proposal.voteCount;
+        this.proposalNames?.push(text);
+        this.proposalCounts?.push(count);
+      }
+    }
+  }
+
+  async getProposalCount() {
+    let token = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.provider);
+    this.numProposal = await token['numProposals']();
+  }
+
+  async vote() {
+
+  }
 
   async connectToMetamask() {
     if (window.ethereum) {
@@ -62,16 +91,15 @@ export class AppComponent {
 
       this.signer.getBalance().then(balance => {
         this.userEthBalance = ethers.utils.formatEther(balance);
-        console.log('Current account address:', balance);
+        console.log('Current account eth balance:', balance);
       }).catch(error => {
         console.error(error);
       })
 
       console.log("goerli address: " + this.CONST_GOERLIETH_ADDRESS);
-      // let token = new ethers.Contract(this.CONST_GOERLIETH_ADDRESS, tokenJson , this.provider);
-      // this.userEthBalance = await token['balanceOf'](this.walletAddress);
-      
-      console.log('Current balance: ' + this.userEthBalance);
+
+      await this.getProposalCount();
+      await this.getProposalName();
     } else {
       console.error('Metamask not detected');
     }

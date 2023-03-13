@@ -17,8 +17,8 @@
         </p>
         <div *ngIf="transactions && transactions.length > 0">
           <p>Transaction List : </p>
-          <ul>
-            <li *ngFor="let transaction of transactions ; let i = index">
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let transaction of transactions | slice:0:5 ; let i = index">
               Transaction # : {{transaction}}
            </li>
           </ul>
@@ -52,5 +52,39 @@
           Clear
         </button>
       </div>
+
+      <div class="card mt-4 mx-auto" *ngIf="signer">
+        <div class="card-body">
+          <h5 class="card-title">Proposal Information</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            Contract Address : {{ CONST_TOKENIZED_BALLOT_ADDRESS }}
+          </h6>
+          <p class="card-text">
+            Number of Proposal : {{ numProposal }}
+          </p>
+
+          <div *ngIf="proposalNames && proposalNames.length > 0">
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let proposalName of proposalNames; let i = index">
+                Proposal {{i+1}} : {{proposalName}}
+             </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="d-flex justify-content-center flex-column mt-4">
+        <p>Delegate ERC20 token at ERC20Vote.sol contract first</p>
+        <div>
+          <button
+          type="button"
+          class="btn btn-danger btn-lg px-4 gap-3"
+          (click)="vote()"
+        >
+          Vote
+        </button>
+        </div>
+      </div>
+
     </div>
   </div>
