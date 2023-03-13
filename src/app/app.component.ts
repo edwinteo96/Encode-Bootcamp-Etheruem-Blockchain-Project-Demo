@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ethers, Wallet, utils, Signer, BigNumber, BigNumberish, Contract } from 'ethers';
-import tokenJson from './erc20-abi.json';
+import erc20voteJson from './erc20vote-abi.json';
 import tokenizedBallotJson from './tokenizedballot-abi.json';
 
 declare var window: any
@@ -26,9 +26,13 @@ export class AppComponent {
   winnerName : string | undefined;
   selectedOption: string | undefined;
   voteNumber: number = 0;
+  erc20VoteContract : Contract | undefined;
+  voteTokenSymbol : string | undefined;
+  voteTokenBalance : string | undefined;
 
 
   CONST_GOERLIETH_ADDRESS: string = "0x7af963cf6d228e564e2a0aa0ddbf06210b38615d";
+  CONST_ERC20VOTE_ADDRESS: string = "0x19cA7135FD75552ACEa1027065DC10AB41b38B34";
   CONST_TOKENIZED_BALLOT_ADDRESS: string = "0x33048359595Def305206558a9a156cc1d97A1C10";
   CONST_LOCALHOST_VOTE: string = "";
 
@@ -70,6 +74,20 @@ export class AppComponent {
     this.blockNumber = 0;
   }
 
+  async getVoteTokenSymbol() {
+    if (this.erc20VoteContract !== undefined) {
+        this.voteTokenSymbol = await this.erc20VoteContract['symbol']();
+    }
+  }
+
+  async getVoteTokenBalance() {
+    if (this.erc20VoteContract !== undefined) {
+      console.log("wallet: " + this.walletAddress );
+      const balance = await this.erc20VoteContract['balanceOf'](ethers.utils.getAddress(this.walletAddress ?? ""));
+      this.voteTokenBalance = ethers.utils.formatEther(balance);  
+    }
+  }
+
   //userWallet: Wallet | undefined;
 
   // createWallet() {
@@ -79,6 +97,13 @@ export class AppComponent {
   //     this.userEthBalance = parseFloat(balanceStr);
   //   })
   // }
+
+  async delegateVote() {
+    if (this.erc20VoteContract !== undefined) {
+      this.erc20VoteContract['delegate'](ethers.utils.getAddress(this.walletAddress ?? "")).send();
+      
+    }
+  }
   
   async getWinnerName() {
     if (this.contract !== undefined) {
@@ -105,6 +130,10 @@ export class AppComponent {
     this.contract = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.provider);
   }
 
+  async getVoteContract () {
+    this.erc20VoteContract = new ethers.Contract(this.CONST_ERC20VOTE_ADDRESS, erc20voteJson, this.provider);
+  }
+
   async getProposalName () {
     if (this.contract !== undefined) {
       if (this.numProposal !== undefined) {
@@ -127,14 +156,14 @@ export class AppComponent {
 
       this.provider = new ethers.providers.Web3Provider(window.ethereum);
       this.signer = this.provider.getSigner();
-      this.signer.getAddress().then(address => {
+      await this.signer.getAddress().then(address => {
         this.walletAddress = address;
         console.log('Current account address:', address);
       }).catch(error => {
         console.error(error);
       });
 
-      this.signer.getBalance().then(balance => {
+      await this.signer.getBalance().then(balance => {
         this.userEthBalance = ethers.utils.formatEther(balance);
         console.log('Current account eth balance:', balance);
       }).catch(error => {
@@ -143,7 +172,11 @@ export class AppComponent {
 
       console.log("goerli address: " + this.CONST_GOERLIETH_ADDRESS);
       
+      // in sequence 
       await this.getContract();
+      await this.getVoteContract();
+      await this.getVoteTokenSymbol();
+      await this.getVoteTokenBalance();
       await this.getProposalCount();
       await this.getProposalName();
       await this.getWinnerName();

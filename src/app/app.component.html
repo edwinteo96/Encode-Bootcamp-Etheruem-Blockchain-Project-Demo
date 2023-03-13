@@ -35,6 +35,18 @@
               </p>
           </div>
         </div>
+
+        <div class="card mt-4 mx-auto" *ngIf="signer">
+          <div class="card-body">
+            <h5 class="card-title">ERC20 Vote Token</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+              {{ CONST_ERC20VOTE_ADDRESS }}
+            </h6>
+            <p class="card-text">
+              Token: {{ voteTokenBalance }} {{voteTokenSymbol}}
+              </p>
+          </div>
+        </div>
       </div>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
         <button
