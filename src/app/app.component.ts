@@ -29,6 +29,7 @@ export class AppComponent {
   erc20VoteContract : Contract | undefined;
   voteTokenSymbol : string | undefined;
   voteTokenBalance : BigNumber | undefined;
+  voteTokenDelegate: number = 0;
 
 
   CONST_GOERLIETH_ADDRESS: string = "0x7af963cf6d228e564e2a0aa0ddbf06210b38615d";
@@ -56,6 +57,11 @@ export class AppComponent {
   onInputChange(event: any) {
     this.voteNumber = event.target.value;
     console.log(`The input value is: ${this.voteNumber}`);
+  }
+
+  onVoteTokenDelegateInputChange(event: any) {
+    this.voteTokenDelegate = event.target.value;
+    console.log(`The input value is: ${this.voteTokenDelegate}`);
   }
 
   getTokenAddess() {

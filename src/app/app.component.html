@@ -41,7 +41,17 @@
           <p class="card-text">
             Token: {{ voteTokenBalance }} {{voteTokenSymbol}}
           </p>
-          <button type="button" class="btn btn-primary btn-lg px-4 gap-3" (click)="delegateVote()">
+          <!-- <div>
+            <label>Token to Delegate : </label>
+            <input type="number" class="form-control" placeholder="Enter a number" (change)="onVoteTokenDelegateInputChange($event)">
+          </div> -->
+          <div class="row">
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+              <label>Token to Delegate : </label>
+              <input type="number" class="form-control" placeholder="Enter a number" (change)="onVoteTokenDelegateInputChange($event)">
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary btn-lg px-4 gap-3 mt-4" (click)="delegateVote()">
             Delegate Here
           </button>
         </div>
@@ -94,7 +104,7 @@
 
     <div class="d-flex justify-content-center flex-column mt-4">
       <p>Delegate ERC20 token at ERC20Vote.sol contract first</p>
-      <div>
+      <div *ngIf="signer">
         <button type="button" class="btn btn-danger btn-lg px-4 gap-3" (click)="vote()">
           Vote
         </button>
