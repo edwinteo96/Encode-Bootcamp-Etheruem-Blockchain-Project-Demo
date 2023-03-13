@@ -28,7 +28,7 @@ export class AppComponent {
   voteNumber: number = 0;
   erc20VoteContract : Contract | undefined;
   voteTokenSymbol : string | undefined;
-  voteTokenBalance : string | undefined;
+  voteTokenBalance : BigNumber | undefined;
 
 
   CONST_GOERLIETH_ADDRESS: string = "0x7af963cf6d228e564e2a0aa0ddbf06210b38615d";
@@ -84,7 +84,7 @@ export class AppComponent {
     if (this.erc20VoteContract !== undefined) {
       console.log("wallet: " + this.walletAddress );
       const balance = await this.erc20VoteContract['balanceOf'](ethers.utils.getAddress(this.walletAddress ?? ""));
-      this.voteTokenBalance = ethers.utils.formatEther(balance);  
+      this.voteTokenBalance = balance; 
     }
   }
 
