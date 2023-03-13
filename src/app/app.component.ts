@@ -19,14 +19,16 @@ export class AppComponent {
   userEthBalance: string | undefined;
   walletAddress: string | undefined;
   signer: Signer | undefined;
-  contract : Contract | undefined;
+  ballotContract : Contract | undefined;
   numProposal : BigNumber | undefined;
   proposalNames : string [] = [];
   proposalCounts : BigNumber [] = [];
   winnerName : string | undefined;
+  // Used in voting tokenized ballot
   selectedOption: string | undefined;
   voteNumber: number = 0;
   erc20VoteContract : Contract | undefined;
+  // Used in delegate
   voteTokenSymbol : string | undefined;
   voteTokenBalance : BigNumber | undefined;
   voteTokenDelegate: number = 0;
@@ -105,34 +107,35 @@ export class AppComponent {
   // }
 
   async delegateVote() {
-    if (this.erc20VoteContract !== undefined) {
-      this.erc20VoteContract['delegate'](ethers.utils.getAddress(this.walletAddress ?? "")).send();
+    const erc20VoteSignContract = new ethers.Contract(this.CONST_ERC20VOTE_ADDRESS, erc20voteJson, this.signer);
+    if (erc20VoteSignContract !== undefined) {
+      await erc20VoteSignContract['delegate'](ethers.utils.getAddress(this.walletAddress ?? ""));
     }
   }
   
   async getWinnerName() {
-    if (this.contract !== undefined) {
-      const name = await this.contract['winnerName']();
+    if (this.ballotContract !== undefined) {
+      const name = await this.ballotContract['winnerName']();
       const text = ethers.utils.parseBytes32String(name).trim();
       this.winnerName = text;
     }
   }
 
   async getProposalCount() {
-    if (this.contract !== undefined) {
-      this.numProposal = await this.contract['numProposals']();
+    if (this.ballotContract !== undefined) {
+      this.numProposal = await this.ballotContract['numProposals']();
     }
   }
 
   async vote() {
-    if (this.contract !== undefined) {
-      const result = await this.contract['vote'](BigNumber.from(this.selectedOption));
+    const ballotVoteContract = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.signer);
+    if (ballotVoteContract !== undefined) {
+      const result = await ballotVoteContract['vote'](BigNumber.from(this.selectedOption),BigNumber.from(this.voteNumber));
     }
-    // .send({ gasLimit: 1000000, gasPrice: 10000000000 });
   }
 
   async getContract () {
-    this.contract = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.provider);
+    this.ballotContract = new ethers.Contract(this.CONST_TOKENIZED_BALLOT_ADDRESS, tokenizedBallotJson, this.provider);
   }
 
   async getVoteContract () {
@@ -140,10 +143,10 @@ export class AppComponent {
   }
 
   async getProposalName () {
-    if (this.contract !== undefined) {
+    if (this.ballotContract !== undefined) {
       if (this.numProposal !== undefined) {
         for (let i = BigNumber.from(0); i.lt(this.numProposal); i = i.add(BigNumber.from(1))) {
-          const proposal = await this.contract['proposals'](i);
+          const proposal = await this.ballotContract['proposals'](i);
           const text = ethers.utils.parseBytes32String(proposal.name).trim();
           const count = proposal.voteCount;
           this.proposalNames?.push(text);
