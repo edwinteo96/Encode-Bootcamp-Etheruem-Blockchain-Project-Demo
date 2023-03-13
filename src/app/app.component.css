@@ -18,3 +18,14 @@
 .radio-option input[type="radio"] {
   margin-right: 10px;
 }
+
+.goerli-btn{
+  text-decoration: none;
+}
+.tab-hover:hover{
+  background: rgb(207, 204, 204);
+}
+
+.balance-btn{
+  margin-right: 0.7rem;
+}
