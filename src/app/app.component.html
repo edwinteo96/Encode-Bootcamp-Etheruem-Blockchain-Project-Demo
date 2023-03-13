@@ -1,9 +1,12 @@
-<div class="px-4 py-5 my-5 text-center">
+<div class="b-body">
+
+<div class="px-4 py-5 my-5 text-center ">
   <h3 class=" fw-bold" >Hello! <span *ngIf="signer">{{truncateEthAddress(walletAddress)}}</span> </h3>
   <div class="top-right">
     <div class="d-flex align-items-center">
       <div class="mt-3 balance-btn" *ngIf="signer">
-    Balance: {{ userEthBalance }} ETH
+        <!-- {{ exampleNumber | number : '1.2-2' }} -->
+    Balance: {{ userEthBalance | number : '1.2-2' }} ETH
   </div>
   <div class="">
     <button type="button" class="btn btn-success mt-3 px-4 ml-5" (click)="connectToMetamask()">
@@ -19,7 +22,7 @@
         <strong>{{ blockNumber }}</strong>
       </p>
       <div *ngIf="transactions && transactions.length > 0">
-        <p>Transaction List : </p>
+        <!-- <p>Transaction List : </p> -->
         <table class="table table-striped" *ngIf="transactions && transactions.length > 0">
           <thead>
             <tr>
@@ -67,11 +70,11 @@
           </div> -->
           <div class="row">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
-              <label>Token to Delegate : </label>
+              <label>Token to Delegate : </label> <br>
               <input type="number" class="form-control" placeholder="Enter a number" (change)="onVoteTokenDelegateInputChange($event)">
             </div>
           </div>
-          <button type="button" class="btn btn-primary btn-lg px-4 gap-3 mt-4" (click)="delegateVote()">
+          <button type="button" class="btn btn-primary btn-col px-4 gap-3 mt-4" (click)="delegateVote()">
             Delegate Here
           </button>
         </div>
@@ -125,11 +128,11 @@
     <div class="d-flex justify-content-center flex-column mt-4">
       <p>Delegate ERC20 token at ERC20Vote.sol contract first</p>
       <div *ngIf="signer">
-        <button type="button" class="btn btn-danger btn-lg px-4 gap-3" (click)="vote()">
+        <button type="button" class="btn btn-primary btn-col px-4 gap-3" (click)="vote()">
           Vote
         </button>
       </div>
     </div>
 
   </div>
-</div>
+</div></div>
