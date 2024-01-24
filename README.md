@@ -16,29 +16,29 @@ For the final project,  we have an idea of a simple web3 wallet and also lock to
 ## Final Project Screenshots
 
 #### Price Feed ABI using uniswap contracts
-![Price Feed API using uniswap contracts](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/APIpricefeed.jpg)
+![Price Feed API using uniswap contracts](../main/weekend08/angular/screenshot/APIpricefeed.jpg)
 
-![Price Feed API using uniswap contracts](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/APIpricefeed2.jpg)
+![Price Feed API using uniswap contracts](../main/weekend08/angular/screenshot/APIpricefeed2.jpg)
 
 
 #### Wallet Token Balance
 
-![Wallet Token Balance](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/balances-pricefeed.jpg)
+![Wallet Token Balance](../main/weekend08/angular/screenshot/balances-pricefeed.jpg)
 
 #### Home Page
 
-![Web3 Wallet Bank Home Page](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/homepage.jpg)
+![Web3 Wallet Bank Home Page](../main/weekend08/angular/screenshot/homepage.jpg)
 
 #### Time Lock Token contract functionality
 
-![Time Lock Token contract functionality](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/lockpage1.jpg)
+![Time Lock Token contract functionality](../main/weekend08/angular/screenshot/lockpage1.jpg)
 
-![Time Lock Token contract functionality](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/lockpage2.jpg)
+![Time Lock Token contract functionality](../main/weekend08/angular/screenshot/lockpage2.jpg)
 
 
 #### Hardhat Test Scripts
 
-![Hardhat Test Scripts](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/test1.png)
+![Hardhat Test Scripts](../main/weekend08/angular/screenshot/test1.png)
 
 
 
