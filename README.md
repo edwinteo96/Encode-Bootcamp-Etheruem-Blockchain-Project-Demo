@@ -1,50 +1,55 @@
-# Angular
+## This project includes all mini projects coded during the Encode Bootcamp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.2.
+![Project Folder Screenshot](image.png)
 
-## Development server
+## Description
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+During this encode bootcamp , I have learn alot about Web3 technologies and how to interact with blockchain using ether.js , metamask sdk and frontend such as angular and nuxtjs as backend to faciliate the API routing.
 
-## Screenshots
+We have also coded smart contracts using hardhat tool suite to ease the development and testing of smart contracts.
 
-![Screenshot](./screenshot/MainPage.jpg)
-### Main Page Screenshot. User can connect wallet using metamask in the upper right corner
-<br />
+Below also attached some screenshots from the final project that we hacked through out the week. 
+It was fun indeed to scratch our heads around the whole blockchain APIs.
 
-![Screenshot](./screenshot/TransactionList.jpg)
-### List of transactions in the block with Goerli blockchain
-<br />
-<br />
+For the final project,  we have an idea of a simple web3 wallet and also lock token smart contract.
 
-![Screenshot](./screenshot/TokenBalance.jpg)
-### Can see user eth balance and erc20 vote token balance
-<br />
-<br />
+## Final Project Screenshots
 
-![Screenshot](./screenshot/DelegateToken.jpg)
-### User can delegate vote tokens to this tokenzied ballot contract
-<br />
-<br />
+#### Price Feed ABI using uniswap contracts
+![Price Feed API using uniswap contracts](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/APIpricefeed.jpg)
 
-![Screenshot](./screenshot/ProposalVote.jpg)
-### Proposal vote page where user can choose proposal and enter vote count
-<br />
-<br />
+![Price Feed API using uniswap contracts](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/APIpricefeed2.jpg)
 
-![Screenshot](./screenshot/VotingError.jpg)
-### When voting power is not enough , will hit this error. Metamask will return error
-<br />
-<br />
 
-## Command Used
+#### Wallet Token Balance
 
-`ng serve --live-reload`
+![Wallet Token Balance](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/balances-pricefeed.jpg)
 
-`ng build`
+#### Home Page
 
-`npm i bootstrap`
+![Web3 Wallet Bank Home Page](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/homepage.jpg)
 
-`npm i @popperjs/core`
+#### Time Lock Token contract functionality
 
-`npm i ethers`
+![Time Lock Token contract functionality](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/lockpage1.jpg)
+
+![Time Lock Token contract functionality](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/lockpage2.jpg)
+
+
+#### Hardhat Test Scripts
+
+![Hardhat Test Scripts](../Encode-Ethereum-Bootcamp-Projects/weekend08/angular/screenshot/test1.png)
+
+
+
+## Installation
+
+1. Clone the repository.
+2. Install the dependencies using `npm install or pnpm install`.
+
+## Usage
+
+1. Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`.
+2. The application will automatically reload if you change any of the source files.
+
+
